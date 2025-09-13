@@ -6,6 +6,7 @@ const router = Router();
 // GET tutti i giochi
 router.get("/", async (_req: Request, res: Response): Promise<void> => {
   const games = await prisma.game.findMany({ orderBy: { id: "asc" } });
+  console.log('Chiamata GET')
   res.json(games);
 });
 
@@ -18,10 +19,27 @@ router.get("/:id", async (req: Request, res: Response): Promise<Response> => {
   return res.json(game);
 });
 
+// Tipizzazione della request body
+interface GameDetailProps {
+  id: number;
+  nomeGioco: string;
+  votoLancio: number | null;
+  votoAggiornato: number | null;
+  recensioneOriginale: string | null;
+  analisiAggiornata: string | null;
+  ultimaRevisione: string | null;
+}
+
 // POST nuovo gioco
-router.post("/", async (req: Request, res: Response): Promise<void> => {
-  const newGame = await prisma.game.create({ data: req.body });
-  res.json(newGame);
+router.post("/", async (req: Request<{}, {}, GameDetailProps>, res: Response) => {
+  try {
+    const newGame = await prisma.game.create({ data: req.body });
+    console.log('Chiamata POST')
+    res.json(newGame);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Errore nella creazione del gioco" });
+  }
 });
 
 export default router;
