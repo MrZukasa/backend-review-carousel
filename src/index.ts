@@ -8,8 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", gamesRouter);
-app.use("/api", authRouter);
+app.use("/api/games", gamesRouter);
+app.use("/api/auth", authRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
