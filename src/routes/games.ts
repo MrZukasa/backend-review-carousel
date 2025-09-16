@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import prisma from "../db";
+import { GameDetailProps } from "../interfaces";
 
 const router = Router();
 
@@ -18,17 +19,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<Response> => {
   if (!game) return res.status(404).json({ error: "Gioco non trovato" });
   return res.json(game);
 });
-
-// Tipizzazione della request body
-interface GameDetailProps {
-  id: number;
-  nomeGioco: string;
-  votoLancio: number | null;
-  votoAggiornato: number | null;
-  recensioneOriginale: string | null;
-  analisiAggiornata: string | null;
-  ultimaRevisione: string | null;
-}
 
 // POST nuovo gioco
 router.post("/", async (req: Request<{}, {}, GameDetailProps>, res: Response) => {
